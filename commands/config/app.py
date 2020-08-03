@@ -2,6 +2,7 @@ import typer
 
 from commands.config.add import add_config
 from commands.config.delete import delete_config
+from commands.config.describe import describe_config
 from commands.config.list import list_configs
 from util.cli import print_to_console
 
@@ -19,9 +20,11 @@ def list_configs_command():
 
 
 @config_app.command(name="describe")
-def describe_config_command():
-    # TODO
-    print_to_console("describe")
+def describe_config_command(
+        config_name: str,
+        show_password: bool = typer.Option(False, "--show-password", help="Whether to show password in output.")
+):
+    describe_config(config_name=config_name, show_password=show_password)
 
 
 @config_app.command(name="delete")

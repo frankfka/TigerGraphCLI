@@ -1,3 +1,5 @@
+from typing import Optional
+
 import typer
 
 
@@ -11,3 +13,9 @@ def get_input_str(prompt: str, hide_input: bool = False) -> str:
 
 def get_input_bool(prompt: str) -> bool:
     return typer.confirm(prompt)
+
+
+def terminate(exit_code: int = 0, message: Optional[str] = None, is_err: bool = False):
+    if message:
+        print_to_console(message, is_err=is_err)
+    raise typer.Exit(code=exit_code)

@@ -1,6 +1,6 @@
 import re
 
-import util.cli as cli
+from util import cli
 from util.tgcli_config import TgcliConfiguration, get_configs, save_configs
 
 
@@ -13,6 +13,7 @@ def add_config():
     new_config = __get_config_interactive__()
     curr_configs = get_configs()
     if curr_configs.get(new_config.name, None):
+        # Prevent updates for now - will need to reinit dependencies, leaving as TODO
         cli.print_to_console(f"Configuration {new_config.name} already exists. "
                              f"To replace it, please delete the configuration first.")
         return
@@ -25,7 +26,7 @@ def __get_config_interactive__() -> TgcliConfiguration:
     # TODO: validation
     cli.print_to_console("Adding a TigerGraph configuration")
     server_address = cli.get_input_str("Server Address (ex. https://xyz.i.tgcloud.io").strip()
-    client_version = cli.get_input_str("Client Version (ex. 3.0.0)").strip()
+    client_version = cli.get_input_str("Client Version (ex. 3.0.0)").strip()  # TODO: give valid versions
     server_username = cli.get_input_str("Username").strip()
     server_password = cli.get_input_str("Password", hide_input=True)
     name = cli.get_input_str("Name (Alphanumeric & Underscore Allowed)").strip()

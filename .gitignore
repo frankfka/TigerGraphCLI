@@ -1,4 +1,7 @@
-.idea
+# Scrap files for testing
+gitignored/
+
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -49,27 +49,32 @@ def delete_dependencies(config: TgcliConfiguration):
     shutil.rmtree(get_dependencies_folder(config), ignore_errors=True)
 
 
-def __get_tg_connection___(config: TgcliConfiguration, graph_name: str = "") -> TigerGraphConnection:
+def __get_tg_connection___(config: TgcliConfiguration, graph_name: Optional[str] = None) -> TigerGraphConnection:
     """
-    Base method to get a connection
+    Base method to get a connection, just a lightweight wrapper around pyTigerGraph
     """
     return TigerGraphConnection(
         host=config.server,
         username=config.username,
         password=config.password,
         clientVersion=config.client_version,
-        graphname=graph_name,
+        graphname=graph_name or '',
+        restppPort='9000',
+        gsPort='14240',
+        apiToken=''
     )
 
 
-def get_initialized_tg_connection(config: TgcliConfiguration, graph_name: str = "") -> TigerGraphConnection:
+def get_tg_connection(config: TgcliConfiguration, graph_name: Optional[str] = None) -> TigerGraphConnection:
+    """
+    Initialize a TigerGraph connection when given a configuration and an optional graph name
+    """
     conn = __get_tg_connection___(config, graph_name)
     init_dependencies(config, conn)  # Manually download dependencies
-    # conn.gsqlInitiated = True
+    conn.gsqlInitiated = True
     conn.downloadCert = False
     conn.downloadJar = False
     conn.jarLocation = get_jar_folder(config).expanduser().__str__()
     conn.certLocation = get_cert_filepath(config).expanduser().__str__()
-    conn.url = conn.gsUrl.replace("https://", "").replace("http://", "")
-    conn.initGsql(conn.jarLocation, conn.certLocation)
+    conn.initGsql(conn.jarLocation, conn.certLocation)  # Still call init for other dependencies (self.url)
     return conn

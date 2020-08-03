@@ -1,4 +1,4 @@
-import util.cli as cli
+from util import cli
 from tigergraph.common import delete_dependencies
 from util.tgcli_config import get_configs, TgcliConfigurationError, save_configs
 
