@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "tgcli"
+version = "0.1.0"
+description = "CLI for TigerGraph"
+authors = ["Frank Jia <jiafrank98@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+typer = "^0.3.1"
+pyTigerGraph = "^0.0.7"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
