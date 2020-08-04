@@ -8,8 +8,7 @@ from typing import Optional
 from pyTigerGraph import TigerGraphConnection
 
 from util.io import APP_DIR
-from util.tgcli_config import TgcliConfiguration
-
+from util.tgcli_config import TgcliConfiguration, upsert_config
 
 CERT_FILENAME = "cert.txt"
 
@@ -37,7 +36,7 @@ def init_dependencies(config: TgcliConfiguration, conn: Optional[TigerGraphConne
     jar_fp = get_jar_filepath(config)
     jar_folder = get_jar_folder(config)
     cert_fp = get_cert_filepath(config)
-    if jar_fp.exists() and cert_fp.exists():
+    if jar_fp.exists() and (config.use_auth and cert_fp.exists()):
         # Already initialized
         return
     if not conn:
@@ -59,9 +58,10 @@ def __get_tg_connection___(config: TgcliConfiguration, graph_name: Optional[str]
         password=config.password,
         clientVersion=config.client_version,
         graphname=graph_name or '',
-        restppPort='9000',
-        gsPort='14240',
-        apiToken=''
+        restppPort=config.restpp_port,
+        gsPort=config.gs_port,
+        apiToken='',
+        useCert=config.use_auth
     )
 
 
@@ -77,4 +77,15 @@ def get_tg_connection(config: TgcliConfiguration, graph_name: Optional[str] = No
     conn.jarLocation = get_jar_folder(config).expanduser().__str__()
     conn.certLocation = get_cert_filepath(config).expanduser().__str__()
     conn.initGsql(conn.jarLocation, conn.certLocation)  # Still call init for other dependencies (self.url)
+    if config.use_auth:
+        # TODO: Consider catching TigerGraph exception
+        secret = config.secret
+        if not secret:
+            print("Creating new secret from credentials and saving to configuration.")
+            secret = conn.createSecret()
+            # Also save the new config
+            config.secret = secret
+            upsert_config(config)
+        # Finally, get the token
+        conn.getToken(secret=secret)
     return conn

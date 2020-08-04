@@ -15,6 +15,9 @@ def describe_config(config_name: str, show_password: bool):
     # Print configuration values
     cli.print_to_console(f"Server: {config.server}")
     cli.print_to_console(f"Client Version: {config.client_version}")
+    cli.print_to_console(f"REST++ Port: {config.restpp_port}")
+    cli.print_to_console(f"GS Port: {config.gs_port}")
+    cli.print_to_console(f"Use Auth: {config.use_auth}")
     cli.print_to_console(f"Username: {config.username}")
     password = "*****"
     if show_password:

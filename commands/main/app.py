@@ -24,6 +24,7 @@ main_app.add_typer(typer_instance=load_app, name="load")
 
 # TODO: get
 
+# TODO: Start server and make sure all works apikey
 @main_app.command("gsql")
 def gsql(
         config_name: str,
@@ -32,6 +33,7 @@ def gsql(
 ):
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name)
     options = []
+    # TODO: Validate that a command is going to be run
     if graph_name:
         options = ["-g", graph_name]
     # TODO: Allow for editor execution, file execution, etc.
