@@ -6,6 +6,7 @@ from pathlib import Path
 import typer
 
 from commands.config.app import config_app
+from commands.main.get.app import get_app
 from commands.main.load.app import load_app
 from commands.main.util import get_initialized_tg_connection
 from tigergraph.common import get_tg_connection
@@ -20,11 +21,11 @@ main_app.add_typer(typer_instance=config_app, name="config")
 # Load
 main_app.add_typer(typer_instance=load_app, name="load")
 
+# Get
+main_app.add_typer(typer_instance=get_app, name="get")
+
 # TODO: Delete
 
-# TODO: get
-
-# TODO: Start server and make sure all works apikey
 @main_app.command("gsql")
 def gsql(
         config_name: str,

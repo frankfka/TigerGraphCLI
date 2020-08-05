@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Tuple, Any, List
 
 from pyTigerGraph.pyTigerGraph import TigerGraphException
 
@@ -17,3 +17,10 @@ def get_initialized_tg_connection(config_name: str, graph_name: Optional[str] = 
     if not config:
         cli.terminate(1, "Invalid configuration. Please provide a valid configuration name.", is_err=True)
     return get_tg_connection(config, graph_name)
+
+
+def resolve_multiple_args(args: Tuple[Any]) -> List[Any]:
+    """
+    A temporary workaround to address: https://github.com/tiangolo/typer/issues/127
+    """
+    return list(args)
