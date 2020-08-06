@@ -83,6 +83,8 @@ def get_tg_connection(config: TgcliConfiguration, graph_name: Optional[str] = No
         if not secret:
             print("Creating new secret from credentials and saving to configuration.")
             secret = conn.createSecret()
+            if not secret:
+                raise ValueError("Could not create a secret for the connection.")
             # Also save the new config
             config.secret = secret
             upsert_config(config)
