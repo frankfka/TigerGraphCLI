@@ -2,14 +2,14 @@ from typing import List
 
 import typer
 
-from commands.main.util import get_initialized_tg_connection, resolve_multiple_args, preprocess_list_query
+from commands.main.util import get_initialized_tg_connection, preprocess_list_query, resolve_multiple_args
 from util import cli
 
-get_app = typer.Typer()
+delete_app = typer.Typer()
 
 
-@get_app.command("vertices")
-def get_vertices(
+@delete_app.command("vertices")
+def delete_vertices(
         # Basic config
         config_name: str,
         graph_name: str,
@@ -22,11 +22,6 @@ def get_vertices(
                  "this is specified, other query parameters are ignored."
         ),
         # Generic query params
-        attributes: List[str] = typer.Option(
-            [], '--attr',
-            help="Attributes to return for each vertex, multiple can be specified by using the flag multiple times. "
-                 "See https://docs.tigergraph.com/dev/restpp-api/built-in-endpoints#select ."
-        ),
         where: List[str] = typer.Option(
             [], '--where',
             help="A condition to match for returned vertices, "
@@ -41,27 +36,34 @@ def get_vertices(
             help="Attribute name to sort results by, multiple can be specified by using the flag multiple times. "
                  "See https://docs.tigergraph.com/dev/restpp-api/built-in-endpoints#sort."
         ),
+        permanent: bool = typer.Option(
+            False, '--permanent',
+            help="If true, the deleted ID's cannot be reinserted without either "
+                 "dropping the graph or clearing the graph store.")
+        ,
         limit: int = typer.Option(10, '--limit', help="Maximum number of results to retrieve."),
         timeout: int = typer.Option(60, '--timeout', help="Timeout in seconds.")
 ):
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
     if vertex_ids:
         # Given ID's give precedence
-        output = conn.getVerticesById(vertex_type, resolve_multiple_args(vertex_ids))
+        output = conn.delVerticesById(
+            vertex_type, resolve_multiple_args(vertex_ids), permanent=permanent, timeout=timeout
+        )
     else:
-        output = conn.getVertices(
+        output = conn.delVertices(
             vertex_type,
-            select=preprocess_list_query(attributes),
             where=preprocess_list_query(where),
             sort=preprocess_list_query(sort_by_attrs),
             limit=limit,
-            timeout=timeout
+            timeout=timeout,
+            permanent=permanent
         )
     cli.print_to_console(output)
 
 
-@get_app.command("edges")
-def get_edges(
+@delete_app.command("edges")
+def delete_edges(
         # Basic config
         config_name: str,
         graph_name: str,
@@ -77,11 +79,6 @@ def get_edges(
             None, "--edge-type", help="Type of the edge. Required if '--to-id' and '--to-type' are specified."
         ),
         # Generic query params
-        attributes: List[str] = typer.Option(
-            [], '--attr',
-            help="Attributes to return for each edge, multiple can be specified by using the flag multiple times. "
-                 "See https://docs.tigergraph.com/dev/restpp-api/built-in-endpoints#select."
-        ),
         where: List[str] = typer.Option(
             [], '--where',
             help="A condition to match for returned edges, "
@@ -100,52 +97,15 @@ def get_edges(
         timeout: int = typer.Option(60, '--timeout', help="Timeout in seconds.")
 ):
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
-    # TODO: Validation on target type/id/etc. and also copy to delete
-    output = conn.getEdges(
+    output = conn.delEdges(
         sourceVertexType=source_vertex_type,
         sourceVertexId=source_vertex_id,
         targetVertexType=target_vertex_type,
         targetVertexId=target_vertex_id,
         edgeType=edge_type,
-        select=preprocess_list_query(attributes),
         where=preprocess_list_query(where),
         sort=preprocess_list_query(sort_by_attrs),
         limit=limit,
         timeout=timeout
     )
     cli.print_to_console(output)
-
-
-@get_app.command("types")
-def get_type_info(
-        # Basic config
-        config_name: str,
-        graph_name: str,
-        # Types to query
-        vertex_type_names: List[str] = typer.Option(
-            [], "--vertex", help="Vertex type name to query. Specify * to query all."
-        ),
-        edge_type_names: List[str] = typer.Option(
-            [], "--edge", help="Vertex type name to query. Specify * to query all."
-        )
-):
-    """
-    Query all if no items are given
-    """
-    conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
-    results = {}
-    query_all = (not vertex_type_names) and (not edge_type_names)
-    if vertex_type_names or query_all:
-        vertex_types = resolve_multiple_args(vertex_type_names)
-        if query_all:
-            vertex_types = "*"
-        results.update(conn.getVertexStats(vertex_types))
-    if edge_type_names or query_all:
-        edge_types = resolve_multiple_args(edge_type_names)
-        if query_all:
-            edge_types = "*"
-        results.update(conn.getEdgeStats(edge_types))
-    cli.print_to_console(results)
-
-
-# TODO: Schema https://pytigergraph.github.io/pyTigerGraph/SchemaFunctions/#getSchema

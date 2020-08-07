@@ -6,11 +6,10 @@ from pathlib import Path
 import typer
 
 from commands.config.app import config_app
+from commands.main.delete.app import delete_app
 from commands.main.get.app import get_app
 from commands.main.load.app import load_app
 from commands.main.util import get_initialized_tg_connection
-from tigergraph.common import get_tg_connection
-from util.tgcli_config import get_configs
 from util import cli
 
 main_app = typer.Typer()
@@ -24,7 +23,15 @@ main_app.add_typer(typer_instance=load_app, name="load")
 # Get
 main_app.add_typer(typer_instance=get_app, name="get")
 
-# TODO: Delete
+# Delete
+main_app.add_typer(typer_instance=delete_app, name="delete")
+
+
+@main_app.command("echo")
+def echo(config_name: str):
+    conn = get_initialized_tg_connection(config_name=config_name, graph_name="")
+    cli.print_to_console(conn.echo())
+
 
 @main_app.command("gsql")
 def gsql(

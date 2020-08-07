@@ -24,3 +24,11 @@ def resolve_multiple_args(args: Tuple[Any]) -> List[Any]:
     A temporary workaround to address: https://github.com/tiangolo/typer/issues/127
     """
     return list(args)
+
+
+def preprocess_list_query(queries: List[str]):
+    """
+    Preprocesses a list of provided conditions into what the REST api expects (comma separated string)
+    """
+    # Note: could use resolve_multiple_args but the same comprehension works for tuples
+    return ",".join([q.strip() for q in queries])
