@@ -29,7 +29,20 @@ main_app.add_typer(typer_instance=delete_app, name="delete")
 
 @main_app.command("echo")
 def echo(config_name: str):
+    """
+    Pings the TigerGraph server associated with the configuration
+    """
     conn = get_initialized_tg_connection(config_name=config_name, graph_name="")
+    cli.print_to_console(conn.echo())
+
+
+@main_app.command("reinit-dependencies")
+def reinit_dependencies(config_name: str):
+    """
+    Force download dependencies and generate a new secret
+    TODO: this doesn't seem to work
+    """
+    conn = get_initialized_tg_connection(config_name=config_name, graph_name="", clean_init=True)
     cli.print_to_console(conn.echo())
 
 

@@ -26,17 +26,20 @@ def get_cert_filepath(config: TgcliConfiguration) -> Path:
 
 
 def get_jar_filepath(config: TgcliConfiguration) -> Path:
-    return get_jar_folder(config) / "gsql_client.jar"  # TODO: This is dependent on pyTigerGraph (hardcoded filename)
+    return get_jar_folder(config) / "gsql_client.jar"  # This is dependent on pyTigerGraph (hardcoded filename)
 
 
-def init_dependencies(config: TgcliConfiguration, conn: Optional[TigerGraphConnection]):
+def init_dependencies(config: TgcliConfiguration,
+                      conn: Optional[TigerGraphConnection],
+                      clean_init: bool = False):
     """
     Initialize dependencies by downloading the TigerGraph jar and the cert, if needed
+    - if clean_init is specified, dependencies will be redownloaded
     """
     jar_fp = get_jar_filepath(config)
     jar_folder = get_jar_folder(config)
     cert_fp = get_cert_filepath(config)
-    if jar_fp.exists() and (config.use_auth and cert_fp.exists()):
+    if jar_fp.exists() and (config.use_auth and cert_fp.exists()) and not clean_init:
         # Already initialized
         return
     if not conn:
@@ -65,12 +68,15 @@ def __get_tg_connection___(config: TgcliConfiguration, graph_name: Optional[str]
     )
 
 
-def get_tg_connection(config: TgcliConfiguration, graph_name: Optional[str] = None) -> TigerGraphConnection:
+def get_tg_connection(config: TgcliConfiguration,
+                      graph_name: Optional[str] = None,
+                      clean_init: bool = False) -> TigerGraphConnection:
     """
     Initialize a TigerGraph connection when given a configuration and an optional graph name
+    - if clean_init is specified, secret will be force updated
     """
     conn = __get_tg_connection___(config, graph_name)
-    init_dependencies(config, conn)  # Manually download dependencies
+    init_dependencies(config, conn, clean_init=clean_init)  # Manually download dependencies
     conn.gsqlInitiated = True
     conn.downloadCert = False
     conn.downloadJar = False
@@ -80,7 +86,7 @@ def get_tg_connection(config: TgcliConfiguration, graph_name: Optional[str] = No
     if config.use_auth:
         # TODO: Consider catching TigerGraph exception
         secret = config.secret
-        if not secret:
+        if not secret or clean_init:
             print("Creating new secret from credentials and saving to configuration.")
             secret = conn.createSecret()
             if not secret:

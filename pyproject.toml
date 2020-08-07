@@ -4,6 +4,10 @@ version = "0.1.0"
 description = "CLI for TigerGraph"
 authors = ["Frank Jia <jiafrank98@gmail.com>"]
 license = "MIT"
+readme = "README.md"
+
+# [tool.poetry.scripts]
+# tgcli = "SOME_PACKAGE.main:app" #TODO
 
 [tool.poetry.dependencies]
 python = "^3.7"
