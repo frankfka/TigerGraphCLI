@@ -1,16 +1,15 @@
 """
 Main Typer app for root commands
 """
-from pathlib import Path
 
 import typer
 
-from commands.config.app import config_app
-from commands.main.delete.app import delete_app
-from commands.main.get.app import get_app
-from commands.main.load.app import load_app
-from commands.main.util import get_initialized_tg_connection
-from util import cli
+from tgcli.commands.config.app import config_app
+from tgcli.commands.main.delete.app import delete_app
+from tgcli.commands.main.get.app import get_app
+from tgcli.commands.main.load.app import load_app
+from tgcli.commands.main.util import get_initialized_tg_connection
+from tgcli.util import cli
 
 main_app = typer.Typer()
 

@@ -2,7 +2,7 @@ import configparser
 from dataclasses import dataclass
 from typing import Dict, Tuple
 
-from util.io import CONFIG_FILEPATH, CREDENTIALS_FILEPATH, APP_DIR
+from tgcli.util.io import CONFIG_FILEPATH, CREDENTIALS_FILEPATH, APP_DIR
 
 # Keys
 CONFIG_SERVER_KEY = "server"

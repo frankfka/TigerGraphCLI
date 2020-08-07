@@ -1,10 +1,8 @@
 from typing import Optional, Tuple, Any, List
 
-from pyTigerGraph.pyTigerGraph import TigerGraphException
-
-from tigergraph.common import get_tg_connection
-from util import cli
-from util.tgcli_config import get_configs
+from tgcli.tigergraph.common import get_tg_connection
+from tgcli.util import cli
+from tgcli.util.tgcli_config import get_configs
 
 
 def get_initialized_tg_connection(config_name: str, graph_name: Optional[str] = None,

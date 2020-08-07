@@ -1,7 +1,7 @@
 import re
 
-from util import cli
-from util.tgcli_config import TgcliConfiguration, get_configs, save_configs, DEFAULT_RESTPP_PORT, DEFAULT_GS_PORT
+from tgcli.util import cli
+from tgcli.util.tgcli_config import TgcliConfiguration, get_configs, save_configs, DEFAULT_RESTPP_PORT, DEFAULT_GS_PORT
 
 
 def __clean_config_name__(name: str) -> str:

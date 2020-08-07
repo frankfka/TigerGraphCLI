@@ -1,10 +1,9 @@
 import typer
 
-from commands.config.add import add_config
-from commands.config.delete import delete_config
-from commands.config.describe import describe_config
-from commands.config.list import list_configs
-from util.cli import print_to_console
+from tgcli.commands.config.add import add_config
+from tgcli.commands.config.delete import delete_config
+from tgcli.commands.config.describe import describe_config
+from tgcli.commands.config.list import list_configs
 
 config_app = typer.Typer()
 

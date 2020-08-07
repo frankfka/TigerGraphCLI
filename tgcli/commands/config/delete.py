@@ -1,6 +1,6 @@
-from util import cli
-from tigergraph.common import delete_dependencies
-from util.tgcli_config import get_configs, TgcliConfigurationError, save_configs
+from tgcli.util import cli
+from tgcli.tigergraph.common import delete_dependencies
+from tgcli.util.tgcli_config import get_configs, TgcliConfigurationError, save_configs
 
 
 def delete_config(name: str):

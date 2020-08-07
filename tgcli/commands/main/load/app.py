@@ -4,8 +4,8 @@ from typing import List
 import typer
 import pandas as pd
 
-from commands.main.util import get_initialized_tg_connection
-from util import cli
+from tgcli.commands.main.util import get_initialized_tg_connection
+from tgcli.util import cli
 
 load_app = typer.Typer()
 

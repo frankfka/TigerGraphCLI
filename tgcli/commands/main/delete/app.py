@@ -2,8 +2,8 @@ from typing import List
 
 import typer
 
-from commands.main.util import get_initialized_tg_connection, preprocess_list_query, resolve_multiple_args
-from util import cli
+from tgcli.commands.main.util import get_initialized_tg_connection, preprocess_list_query, resolve_multiple_args
+from tgcli.util import cli
 
 delete_app = typer.Typer()
 

@@ -7,8 +7,8 @@ from typing import Optional
 
 from pyTigerGraph import TigerGraphConnection
 
-from util.io import APP_DIR
-from util.tgcli_config import TgcliConfiguration, upsert_config
+from tgcli.util.io import APP_DIR
+from tgcli.util.tgcli_config import TgcliConfiguration, upsert_config
 
 CERT_FILENAME = "cert.txt"
 

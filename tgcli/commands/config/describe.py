@@ -1,5 +1,5 @@
-from util import cli
-from util.tgcli_config import get_configs, TgcliConfigurationError
+from tgcli.util import cli
+from tgcli.util.tgcli_config import get_configs, TgcliConfigurationError
 
 
 def describe_config(config_name: str, show_password: bool):
