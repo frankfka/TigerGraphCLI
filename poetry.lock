@@ -155,8 +155,8 @@ category = "main"
 description = "Python Data Validation for Humans™."
 name = "validators"
 optional = false
-python-versions = "*"
-version = "0.16.0"
+python-versions = ">=3.4"
+version = "0.17.1"
 
 [package.dependencies]
 decorator = ">=3.4.0"
@@ -266,5 +266,6 @@ urllib3 = [
     {file = "urllib3-1.25.10.tar.gz", hash = "sha256:91056c15fa70756691db97756772bb1eb9678fa585d9184f24534b100dc60f4a"},
 ]
 validators = [
-    {file = "validators-0.16.0.tar.gz", hash = "sha256:992abaff76f0fb4040e29c57222b0786ca8fab2a779104dd855e880039602b15"},
+    {file = "validators-0.17.1-py3-none-any.whl", hash = "sha256:898b6b8197fbc320daf25d3b32fa928fd25e225c33790cb58ed54b48aebe1858"},
+    {file = "validators-0.17.1.tar.gz", hash = "sha256:401cb441dd61bb1a03b10c8a3a884642409e22a2a19e03bbfc4891e0ddbc7268"},
 ]

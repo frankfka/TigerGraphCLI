@@ -150,9 +150,8 @@ def get_type_info(
 
 
 @get_app.command("schema")
-def get_schema(config_name: str):
+def get_schema(config_name: str, graph_name: str):
     """Retrieve the schema for the configuration"""
-    # TODO: test
-    conn = get_initialized_tg_connection(config_name=config_name, graph_name="", require_graph=False)
+    conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name)
     output = conn.getSchema()
     cli.print_to_console(output)

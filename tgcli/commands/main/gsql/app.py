@@ -8,7 +8,6 @@ from tgcli.util import cli
 gsql_app = typer.Typer()
 
 
-# TODO: test this
 @gsql_app.command("run")
 def run_gsql(
         config_name: str,
