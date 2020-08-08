@@ -8,7 +8,8 @@ from tgcli.commands.main.util import get_initialized_tg_connection
 from tgcli.util import cli
 
 
-def __get_df__(path: Path, filetype: str):
+def __get_df__(path: Path, filetype: str) -> pd.DataFrame:
+    """Retrieves a pandas dataframe from a source"""
     if filetype is "csv":
         return pd.read_csv(path)
     elif filetype is "pickle":
@@ -49,6 +50,7 @@ def load_vertices(
             exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True
         )
 ):
+    """Loads a set of vertices from a given datasource."""
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
     num_upserted: int = 0
     vertex_attributes = None
@@ -116,6 +118,7 @@ def load_edges(
             exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True
         )
 ):
+    """Loads a set of edges from a given datasource."""
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
     num_upserted: int = 0
     df = None

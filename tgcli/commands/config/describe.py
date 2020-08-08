@@ -2,7 +2,8 @@ from tgcli.util import cli
 from tgcli.util.tgcli_config import get_configs, TgcliConfigurationError
 
 
-def describe_config(config_name: str, show_password: bool):
+def describe_config(config_name: str, show_sensitive: bool):
+    """Output all the parameters from a TgcliConfiguration, optionally showing sensitive data."""
     configs = {}
     try:
         configs = get_configs(raise_on_nonexistent=True)
@@ -20,6 +21,9 @@ def describe_config(config_name: str, show_password: bool):
     cli.print_to_console(f"Use Auth: {config.use_auth}")
     cli.print_to_console(f"Username: {config.username}")
     password = "*****"
-    if show_password:
+    secret = "*****"
+    if show_sensitive:
         password = config.password
+        secret = config.secret
     cli.print_to_console(f"Password: {password}")
+    cli.print_to_console(f"Secret: {secret}")

@@ -5,13 +5,20 @@ from tgcli.util.tgcli_config import TgcliConfiguration, get_configs, save_config
 
 
 def __clean_config_name__(name: str) -> str:
+    """Only allow alphanumeric and underscores in the name"""
     return re.sub(r'\W+', '', name)
 
 
 def add_config():
+    """Adds a configuration - only supports interactive input for now"""
     new_config = __get_config_interactive__()
     curr_configs = get_configs()
     if curr_configs.get(new_config.name, None):
+        # Make sure that we want to overwrite
+        if not cli.get_input_bool(
+                prompt=f"Configuration {new_config.name} already exists. Do you want to overwrite it?"
+        ):
+            cli.terminate(message="Add configuration cancelled.")
         # Overwriting a configuration may need a reinitialization of dependencies
         cli.print_to_console(f"Configuration {new_config.name} already exists. You may need to run "
                              f"tgcli reinit-dependencies to update dependencies to reflect this new configuration.")
@@ -21,8 +28,12 @@ def add_config():
 
 
 def __get_config_interactive__() -> TgcliConfiguration:
+    """Retrieves a configuration from the user interactively
+
+    :return: A TgcliConfiguration that corresponds to the input
+    """
     cli.print_to_console("Adding a TigerGraph configuration")
-    server_address = cli.get_input_str("Server Address (ex. https://xyz.i.tgcloud.io").strip()
+    server_address = cli.get_input_str("Server Address (ex. https://xyz.i.tgcloud.io)").strip()
     client_version = cli.get_input_str("Client Version (ex. 3.0.0)").strip()  # TODO: give valid versions
     restpp_port = cli.get_input_str("REST++ Port", default=DEFAULT_RESTPP_PORT).strip()
     gs_port = cli.get_input_str("GS Port", default=DEFAULT_GS_PORT).strip()

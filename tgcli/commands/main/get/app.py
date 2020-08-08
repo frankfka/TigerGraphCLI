@@ -44,6 +44,7 @@ def get_vertices(
         limit: int = typer.Option(10, '--limit', help="Maximum number of results to retrieve."),
         timeout: int = typer.Option(60, '--timeout', help="Timeout in seconds.")
 ):
+    """Get a set of vertices, either by ID or by query"""
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
     if vertex_ids:
         # Given ID's give precedence
@@ -99,6 +100,7 @@ def get_edges(
         limit: int = typer.Option(10, '--limit', help="Maximum number of results to retrieve."),
         timeout: int = typer.Option(60, '--timeout', help="Timeout in seconds.")
 ):
+    """Get a set of edges"""
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
     if target_vertex_id and (not target_vertex_type or not edge_type):
         cli.terminate(message="Target vertex ID is specified but target vertex type or edge type isn't.", is_err=True)
@@ -130,9 +132,7 @@ def get_type_info(
             [], "--edge", help="Vertex type name to query. Specify * to query all."
         )
 ):
-    """
-    Query all if no items are given
-    """
+    """Get a set of types, either vertices or edges. If no optioans are given, all types are returned."""
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
     results = {}
     query_all = (not vertex_type_names) and (not edge_type_names)
@@ -151,6 +151,8 @@ def get_type_info(
 
 @get_app.command("schema")
 def get_schema(config_name: str):
+    """Retrieve the schema for the configuration"""
+    # TODO: test
     conn = get_initialized_tg_connection(config_name=config_name, graph_name="", require_graph=False)
     output = conn.getSchema()
     cli.print_to_console(output)

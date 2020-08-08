@@ -1,3 +1,10 @@
+"""Typer app for interacting with TigerGraph CLI configurations
+
+Each configuration holds all the information necessary to establish a connection to a TigerGraph server.
+Configurations are stored in $HOME/.tgcli/ in two files: `config` and `credentials`
+"""
+
+
 import typer
 
 from tgcli.commands.config.add import add_config
@@ -10,22 +17,34 @@ config_app = typer.Typer()
 
 @config_app.command(name="add")
 def add_config_command():
+    """Adds a TgcliConfiguration interactively"""
     add_config()
 
 
 @config_app.command(name="list")
 def list_configs_command():
+    """List all the TgcliConfigurations currently available
+
+    Using this command will print out all the configuration names and their respective servers
+    """
     list_configs()
 
 
 @config_app.command(name="describe")
 def describe_config_command(
         config_name: str,
-        show_password: bool = typer.Option(False, "--show-password", help="Whether to show password in output.")
+        show_sensitive: bool = typer.Option(
+            False, "--show-sensitive", help="Show password and secret in output if specified."
+        )
 ):
-    describe_config(config_name=config_name, show_password=show_password)
+    """Describe a configuration when given the config name
+
+    This will print all the parameters of the configuration to console,
+    """
+    describe_config(config_name=config_name, show_sensitive=show_sensitive)
 
 
 @config_app.command(name="delete")
 def delete_config_command(name: str):
+    """Deletes a configuration when given the config name"""
     delete_config(name)

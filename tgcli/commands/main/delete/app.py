@@ -44,6 +44,7 @@ def delete_vertices(
         limit: int = typer.Option(10, '--limit', help="Maximum number of results to retrieve."),
         timeout: int = typer.Option(60, '--timeout', help="Timeout in seconds.")
 ):
+    """Delete a set of vertices, either by ID or by a query"""
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
     if vertex_ids:
         # Given ID's give precedence
@@ -96,6 +97,7 @@ def delete_edges(
         limit: int = typer.Option(10, '--limit', help="Maximum number of results to retrieve."),
         timeout: int = typer.Option(60, '--timeout', help="Timeout in seconds.")
 ):
+    """Delete a set of edges."""
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
     if target_vertex_id and (not target_vertex_type or not edge_type):
         cli.terminate(message="Target vertex ID is specified but target vertex type or edge type isn't.", is_err=True)

@@ -22,11 +22,13 @@ def run_gsql(
             False, "--editor", help="Launch an interactive editor to load the GSQL command"
         )
 ):
+    """Run a GSQL query against a configuration through an inline command, file, or interactive editor"""
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name)
     options = []
     if graph_name:
         options = ["-g", graph_name]
     command = None
+    # Get the GSQL command depending on the flag
     if inline_command:
         command = inline_command
     elif file_command:
