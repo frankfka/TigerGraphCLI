@@ -7,6 +7,16 @@ import pandas as pd
 from tgcli.commands.main.util import get_initialized_tg_connection
 from tgcli.util import cli
 
+
+def __get_df__(path: Path, filetype: str):
+    if filetype is "csv":
+        return pd.read_csv(path)
+    elif filetype is "pickle":
+        return pd.read_pickle(path)
+    elif filetype is "json":
+        return pd.read_json(path)
+
+
 load_app = typer.Typer()
 
 
@@ -29,21 +39,35 @@ def load_vertices(
         csv_filepath: Path = typer.Option(
             None, "--csv", help="CSV filepath to load vertices from.",
             exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True
+        ),
+        pickle_filepath: Path = typer.Option(
+            None, "--pickle", help="Pickle filepath to load vertices from.",
+            exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True
+        ),
+        json_filepath: Path = typer.Option(
+            None, "--json", help="JSON filepath to load vertices from.",
+            exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True
         )
 ):
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
     num_upserted: int = 0
     vertex_attributes = None
+    df = None
     if attrs:
         vertex_attributes = {val: val for val in attrs}
     if csv_filepath:
+        df = __get_df__(csv_filepath, "csv")
+    elif pickle_filepath:
+        df = __get_df__(pickle_filepath, "pickle")
+    elif json_filepath:
+        df = __get_df__(json_filepath, "json")
+    if df:
         num_upserted = conn.upsertVertexDataframe(
-            df=pd.read_csv(csv_filepath),
+            df=df,
             vertexType=vertex_type,
             v_id=vertex_id_col,
             attributes=vertex_attributes
         )
-    # TODO: json, pickle
     else:
         cli.terminate(message="No vertices loaded. Please specify a data source.")
     cli.print_to_console(f"Vertex load success. {num_upserted} vertices added.")
@@ -82,16 +106,30 @@ def load_edges(
         csv_filepath: Path = typer.Option(
             None, "--csv", help="CSV filepath to load vertices from.",
             exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True
+        ),
+        pickle_filepath: Path = typer.Option(
+            None, "--pickle", help="Pickle filepath to load vertices from.",
+            exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True
+        ),
+        json_filepath: Path = typer.Option(
+            None, "--json", help="JSON filepath to load vertices from.",
+            exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True
         )
 ):
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
     num_upserted: int = 0
-    df = pd.read_csv(csv_filepath)
+    df = None
     ignore_cols = {source_vertex_id_col, target_vertex_id_col}
     edge_attributes = {val: val for val in df.columns if val not in ignore_cols}
     if edge_attrs:
         edge_attributes = {val: val for val in edge_attrs}
     if csv_filepath:
+        df = __get_df__(csv_filepath, "csv")
+    elif pickle_filepath:
+        df = __get_df__(pickle_filepath, "pickle")
+    elif json_filepath:
+        df = __get_df__(json_filepath, "json")
+    if df:
         num_upserted = conn.upsertEdgesDataframe(
             df=df,
             sourceVertexType=source_vertex_type,
@@ -101,7 +139,6 @@ def load_edges(
             to_id=target_vertex_id_col,
             attributes=edge_attributes
         )
-    # TODO: json, pickle
     else:
         cli.terminate(message="No edges loaded. Please specify a data source.")
     cli.print_to_console(f"Edge load success. {num_upserted} edges added.")

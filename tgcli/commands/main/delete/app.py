@@ -97,6 +97,8 @@ def delete_edges(
         timeout: int = typer.Option(60, '--timeout', help="Timeout in seconds.")
 ):
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
+    if target_vertex_id and (not target_vertex_type or not edge_type):
+        cli.terminate(message="Target vertex ID is specified but target vertex type or edge type isn't.", is_err=True)
     output = conn.delEdges(
         sourceVertexType=source_vertex_type,
         sourceVertexId=source_vertex_id,

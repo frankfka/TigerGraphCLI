@@ -100,7 +100,8 @@ def get_edges(
         timeout: int = typer.Option(60, '--timeout', help="Timeout in seconds.")
 ):
     conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name, require_graph=True)
-    # TODO: Validation on target type/id/etc. and also copy to delete
+    if target_vertex_id and (not target_vertex_type or not edge_type):
+        cli.terminate(message="Target vertex ID is specified but target vertex type or edge type isn't.", is_err=True)
     output = conn.getEdges(
         sourceVertexType=source_vertex_type,
         sourceVertexId=source_vertex_id,
@@ -148,4 +149,8 @@ def get_type_info(
     cli.print_to_console(results)
 
 
-# TODO: Schema https://pytigergraph.github.io/pyTigerGraph/SchemaFunctions/#getSchema
+@get_app.command("schema")
+def get_schema(config_name: str):
+    conn = get_initialized_tg_connection(config_name=config_name, graph_name="", require_graph=False)
+    output = conn.getSchema()
+    cli.print_to_console(output)

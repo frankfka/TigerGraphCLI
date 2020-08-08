@@ -9,14 +9,12 @@ def __clean_config_name__(name: str) -> str:
 
 
 def add_config():
-    # TODO: Allow for programmatic
     new_config = __get_config_interactive__()
     curr_configs = get_configs()
     if curr_configs.get(new_config.name, None):
-        # Prevent updates for now - will need to reinit dependencies, leaving as TODO
-        cli.print_to_console(f"Configuration {new_config.name} already exists. "
-                             f"To replace it, please delete the configuration first.")
-        return
+        # Overwriting a configuration may need a reinitialization of dependencies
+        cli.print_to_console(f"Configuration {new_config.name} already exists. You may need to run "
+                             f"tgcli reinit-dependencies to update dependencies to reflect this new configuration.")
     curr_configs[new_config.name] = new_config
     save_configs(curr_configs)
     cli.print_to_console(f"Configuration {new_config.name} added for server {new_config.server}")

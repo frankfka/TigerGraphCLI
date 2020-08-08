@@ -1,10 +1,10 @@
-from typing import Optional
+from typing import Optional, Any
 
 import typer
 
 
-def print_to_console(text: str, is_err: bool = False):
-    typer.echo(text, err=is_err)
+def print_to_console(content: Any, is_err: bool = False):
+    typer.echo(content, err=is_err)
 
 
 def get_input_str(prompt: str, hide_input: bool = False, default: Optional = None) -> str:
