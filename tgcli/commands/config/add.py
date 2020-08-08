@@ -21,7 +21,6 @@ def add_config():
 
 
 def __get_config_interactive__() -> TgcliConfiguration:
-    # TODO: validation, defaults
     cli.print_to_console("Adding a TigerGraph configuration")
     server_address = cli.get_input_str("Server Address (ex. https://xyz.i.tgcloud.io").strip()
     client_version = cli.get_input_str("Client Version (ex. 3.0.0)").strip()  # TODO: give valid versions

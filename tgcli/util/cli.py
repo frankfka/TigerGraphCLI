@@ -15,6 +15,10 @@ def get_input_bool(prompt: str, default: Optional[bool] = False) -> bool:
     return typer.confirm(prompt, default=default)
 
 
+def get_input_from_editor(initial_value: str) -> str:
+    return typer.edit()
+
+
 def terminate(exit_code: int = 0, message: Optional[str] = None, is_err: bool = False):
     if message:
         print_to_console(message, is_err=is_err)

@@ -1,12 +1,14 @@
 """
 Main Typer app for root commands
 """
+__version__ = '0.1.0'
 
 import typer
 
 from tgcli.commands.config.app import config_app
 from tgcli.commands.main.delete.app import delete_app
 from tgcli.commands.main.get.app import get_app
+from tgcli.commands.main.gsql.app import gsql_app
 from tgcli.commands.main.load.app import load_app
 from tgcli.commands.main.util import get_initialized_tg_connection
 from tgcli.util import cli
@@ -15,6 +17,9 @@ main_app = typer.Typer()
 
 # Config
 main_app.add_typer(typer_instance=config_app, name="config")
+
+# GSQL
+main_app.add_typer(typer_instance=gsql_app, name="gsql")
 
 # Load
 main_app.add_typer(typer_instance=load_app, name="load")
@@ -45,17 +50,6 @@ def reinit_dependencies(config_name: str):
     cli.print_to_console(conn.echo())
 
 
-@main_app.command("gsql")
-def gsql(
-        config_name: str,
-        graph_name: str = typer.Argument(None, help="Graph to query"),
-        gsql_command: str = typer.Option(None, "--command", help="Inline GSQL command")
-):
-    conn = get_initialized_tg_connection(config_name=config_name, graph_name=graph_name)
-    options = []
-    # TODO: Validate that a command is going to be run
-    if graph_name:
-        options = ["-g", graph_name]
-    # TODO: Allow for editor execution, file execution, etc.
-    output = conn.gsql(gsql_command, options=options)
-    cli.print_to_console(output)
+@main_app.command("version")
+def version():
+    cli.print_to_console(__version__)
