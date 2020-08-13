@@ -2,6 +2,7 @@ from pathlib import Path
 
 import typer
 
+from tgcli.commands.etc.help_text import CONFIG_ARG_HELP, GRAPH_ARG_HELP
 from tgcli.commands.util import get_initialized_tg_connection
 from tgcli.util import cli
 
@@ -10,8 +11,8 @@ gsql_app = typer.Typer(help="Run GSQL commands against a TigerGraph server.")
 
 @gsql_app.command("run")
 def run_gsql(
-        config_name: str,
-        graph_name: str = typer.Argument(None, help="Graph to query"),
+        config_name: str = typer.Argument(None, help=CONFIG_ARG_HELP),
+        graph_name: str = typer.Argument(None, help=GRAPH_ARG_HELP),
         inline_command: str = typer.Option(None, "--command", help="Inline GSQL command"),
         file_command: Path = typer.Option(
             None, "--file", help="Filepath to load a GSQL command from.",

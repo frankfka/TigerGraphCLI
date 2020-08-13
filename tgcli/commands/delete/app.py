@@ -2,6 +2,7 @@ from typing import List
 
 import typer
 
+from tgcli.commands.etc.help_text import CONFIG_ARG_HELP, GRAPH_ARG_HELP
 from tgcli.commands.util import get_initialized_tg_connection, preprocess_list_query, resolve_multiple_args
 from tgcli.util import cli
 
@@ -11,8 +12,8 @@ delete_app = typer.Typer(help="Delete data from your TigerGraph server.")
 @delete_app.command("vertices")
 def delete_vertices(
         # Basic config
-        config_name: str,
-        graph_name: str,
+        config_name: str = typer.Argument(None, help=CONFIG_ARG_HELP),
+        graph_name: str = typer.Argument(None, help=GRAPH_ARG_HELP),
         # Required items
         vertex_type: str = typer.Option(..., "--type", help="Type of the vertex."),
         # Query by ID's. If given, ID's take precedence over the generic query
@@ -66,8 +67,8 @@ def delete_vertices(
 @delete_app.command("edges")
 def delete_edges(
         # Basic config
-        config_name: str,
-        graph_name: str,
+        config_name: str = typer.Argument(None, help=CONFIG_ARG_HELP),
+        graph_name: str = typer.Argument(None, help=GRAPH_ARG_HELP),
         # Required items
         source_vertex_type: str = typer.Option(..., "--from-type", help="Type of the source vertex."),
         source_vertex_id: str = typer.Option(..., "--from-id", help="ID of the source vertex."),

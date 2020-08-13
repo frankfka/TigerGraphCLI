@@ -11,6 +11,7 @@ from tgcli.commands.config.add import add_config
 from tgcli.commands.config.delete import delete_config
 from tgcli.commands.config.describe import describe_config
 from tgcli.commands.config.list import list_configs
+from tgcli.commands.etc.help_text import CONFIG_ARG_HELP
 
 config_app = typer.Typer(help="Manage TigerGraph configurations for tgcli.")
 
@@ -32,7 +33,7 @@ def list_configs_command():
 
 @config_app.command(name="describe")
 def describe_config_command(
-        config_name: str,
+        config_name: str = typer.Argument(None, help=CONFIG_ARG_HELP),
         show_sensitive: bool = typer.Option(
             False, "--show-sensitive", help="Show password and secret in output if specified."
         )
@@ -45,6 +46,6 @@ def describe_config_command(
 
 
 @config_app.command(name="delete")
-def delete_config_command(name: str):
+def delete_config_command(name: str = typer.Argument(None, help=CONFIG_ARG_HELP)):
     """Deletes a configuration when given the config name"""
     delete_config(name)

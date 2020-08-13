@@ -4,6 +4,7 @@ from typing import List
 import typer
 import pandas as pd
 
+from tgcli.commands.etc.help_text import CONFIG_ARG_HELP, GRAPH_ARG_HELP
 from tgcli.commands.util import get_initialized_tg_connection
 from tgcli.util import cli
 
@@ -24,8 +25,8 @@ load_app = typer.Typer(help="Load data into your TigerGraph server.")
 @load_app.command(name="vertices")
 def load_vertices(
         # Basic config
-        config_name: str,
-        graph_name: str,
+        config_name: str = typer.Argument(None, help=CONFIG_ARG_HELP),
+        graph_name: str = typer.Argument(None, help=GRAPH_ARG_HELP),
         # Required attributes
         vertex_type: str = typer.Option(..., "--type", help="Vertex type to map data to.", prompt="Vertex type"),
         vertex_id_col: str = typer.Option(..., "--id", help="Column name to set as the ID of the vertex",
@@ -78,8 +79,8 @@ def load_vertices(
 @load_app.command(name="edges")
 def load_edges(
         # Basic config
-        config_name: str,
-        graph_name: str,
+        config_name: str = typer.Argument(None, help=CONFIG_ARG_HELP),
+        graph_name: str = typer.Argument(None, help=GRAPH_ARG_HELP),
         # Required items
         source_vertex_type: str = typer.Option(
             ..., "--source-type", help="Type name of the source vertex", prompt="Source vertex type"

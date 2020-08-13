@@ -2,6 +2,7 @@ from typing import List
 
 import typer
 
+from tgcli.commands.etc.help_text import GRAPH_ARG_HELP, CONFIG_ARG_HELP
 from tgcli.commands.util import get_initialized_tg_connection, resolve_multiple_args, preprocess_list_query
 from tgcli.util import cli
 
@@ -11,8 +12,8 @@ get_app = typer.Typer(help="Get resources from your TigerGraph server.")
 @get_app.command("vertices")
 def get_vertices(
         # Basic config
-        config_name: str,
-        graph_name: str,
+        config_name: str = typer.Argument(None, help=CONFIG_ARG_HELP),
+        graph_name: str = typer.Argument(None, help=GRAPH_ARG_HELP),
         # Required items
         vertex_type: str = typer.Option(..., "--type", help="Type of the vertex."),
         # Query by ID's. If given, ID's take precedence over the generic query
@@ -64,8 +65,8 @@ def get_vertices(
 @get_app.command("edges")
 def get_edges(
         # Basic config
-        config_name: str,
-        graph_name: str,
+        config_name: str = typer.Argument(None, help=CONFIG_ARG_HELP),
+        graph_name: str = typer.Argument(None, help=GRAPH_ARG_HELP),
         # Required items
         source_vertex_type: str = typer.Option(..., "--from-type", help="Type of the source vertex."),
         source_vertex_id: str = typer.Option(..., "--from-id", help="ID of the source vertex."),
@@ -122,8 +123,8 @@ def get_edges(
 @get_app.command("types")
 def get_type_info(
         # Basic config
-        config_name: str,
-        graph_name: str,
+        config_name: str = typer.Argument(None, help=CONFIG_ARG_HELP),
+        graph_name: str = typer.Argument(None, help=GRAPH_ARG_HELP),
         # Types to query
         vertex_type_names: List[str] = typer.Option(
             [], "--vertex", help="Vertex type name to query. Specify * to query all."
