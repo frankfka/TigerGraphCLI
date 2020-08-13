@@ -12,7 +12,7 @@ from tgcli.commands.config.delete import delete_config
 from tgcli.commands.config.describe import describe_config
 from tgcli.commands.config.list import list_configs
 
-config_app = typer.Typer()
+config_app = typer.Typer(help="Manage TigerGraph configurations for tgcli.")
 
 
 @config_app.command(name="add")

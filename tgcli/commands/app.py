@@ -1,19 +1,19 @@
 """
 Main Typer app for root commands
 """
-__version__ = '0.1.0'
+__version__ = '0.0.1'
 
 import typer
 
 from tgcli.commands.config.app import config_app
-from tgcli.commands.main.delete.app import delete_app
-from tgcli.commands.main.get.app import get_app
-from tgcli.commands.main.gsql.app import gsql_app
-from tgcli.commands.main.load.app import load_app
-from tgcli.commands.main.util import get_initialized_tg_connection
+from tgcli.commands.delete.app import delete_app
+from tgcli.commands.get.app import get_app
+from tgcli.commands.gsql.app import gsql_app
+from tgcli.commands.load.app import load_app
+from tgcli.commands.util import get_initialized_tg_connection
 from tgcli.util import cli
 
-main_app = typer.Typer()
+main_app = typer.Typer(help="CLI for interacting with TigerGraph.")
 
 # Config
 main_app.add_typer(typer_instance=config_app, name="config")

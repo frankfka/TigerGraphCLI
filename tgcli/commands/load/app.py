@@ -4,7 +4,7 @@ from typing import List
 import typer
 import pandas as pd
 
-from tgcli.commands.main.util import get_initialized_tg_connection
+from tgcli.commands.util import get_initialized_tg_connection
 from tgcli.util import cli
 
 
@@ -18,7 +18,7 @@ def __get_df__(path: Path, filetype: str) -> pd.DataFrame:
         return pd.read_json(path)
 
 
-load_app = typer.Typer()
+load_app = typer.Typer(help="Load data into your TigerGraph server.")
 
 
 @load_app.command(name="vertices")

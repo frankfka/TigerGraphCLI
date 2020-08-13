@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "tgcli"
-version = "0.1.0"
+version = "0.0.1"
 description = "CLI for TigerGraph"
 authors = ["Frank Jia <jiafrank98@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 
 [tool.poetry.scripts]
-tgcli = "tgcli.commands.main.app:main_app"
+tgcli = "tgcli.commands.app:main_app"
 
 [tool.poetry.dependencies]
 python = "^3.7"

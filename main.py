@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-from tgcli.commands.main.app import main_app
+from tgcli import tgcli
 
 if __name__ == '__main__':
     """
     This allows us to run tgcli using ./main.py instead of calling tgcli directly
     """
-    main_app()
+    tgcli()

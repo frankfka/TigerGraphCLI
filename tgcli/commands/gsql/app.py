@@ -2,10 +2,10 @@ from pathlib import Path
 
 import typer
 
-from tgcli.commands.main.util import get_initialized_tg_connection
+from tgcli.commands.util import get_initialized_tg_connection
 from tgcli.util import cli
 
-gsql_app = typer.Typer()
+gsql_app = typer.Typer(help="Run GSQL commands against a TigerGraph server.")
 
 
 @gsql_app.command("run")
