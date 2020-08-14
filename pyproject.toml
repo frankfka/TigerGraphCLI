@@ -1,10 +1,16 @@
 [tool.poetry]
-name = "tgcli"
+name = "tigergraphcli"
 version = "0.0.1"
 description = "CLI for TigerGraph"
 authors = ["Frank Jia <jiafrank98@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+homepage = "https://github.com/frankfka/TigerGraphCLI"
+documentation = "https://github.com/frankfka/TigerGraphCLI"
+keywords = ["TigerGraph", "CLI", "pyTigerGraph", "Graph Database"]
+packages = [
+    { include = "tgcli" },
+]
 
 [tool.poetry.scripts]
 tgcli = "tgcli:tgcli"
