@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.scripts]
-tgcli = "tgcli.commands.app:main_app"
+tgcli = "tgcli:tgcli"
 
 [tool.poetry.dependencies]
 python = "^3.7"

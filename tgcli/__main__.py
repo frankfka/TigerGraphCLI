@@ -1,2 +1,2 @@
 from . import tgcli
-tgcli()
+tgcli(prog_name="tgcli")
