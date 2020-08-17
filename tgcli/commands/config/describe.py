@@ -15,7 +15,7 @@ def describe_config(config_name: str, show_sensitive: bool):
     cli.print_to_console(f"Configuration {config_name}")
     # Print configuration values
     cli.print_to_console(f"Server: {config.server}")
-    cli.print_to_console(f"Client Version: {config.client_version}")
+    cli.print_to_console(f"Client Version: {config.client_version}")  # TODO: List v3_0_0 v2_6_0 v2_5_2 v2_5_0 v2_4_1 v2_4_0 v2_3_2
     cli.print_to_console(f"REST++ Port: {config.restpp_port}")
     cli.print_to_console(f"GS Port: {config.gs_port}")
     cli.print_to_console(f"Use Auth: {config.use_auth}")

@@ -64,7 +64,7 @@ def load_vertices(
         df = __get_df__(pickle_filepath, "pickle")
     elif json_filepath:
         df = __get_df__(json_filepath, "json")
-    if df:
+    if df is not None:
         num_upserted = conn.upsertVertexDataframe(
             df=df,
             vertexType=vertex_type,
@@ -124,16 +124,16 @@ def load_edges(
     num_upserted: int = 0
     df = None
     ignore_cols = {source_vertex_id_col, target_vertex_id_col}
-    edge_attributes = {val: val for val in df.columns if val not in ignore_cols}
-    if edge_attrs:
-        edge_attributes = {val: val for val in edge_attrs}
     if csv_filepath:
         df = __get_df__(csv_filepath, "csv")
     elif pickle_filepath:
         df = __get_df__(pickle_filepath, "pickle")
     elif json_filepath:
         df = __get_df__(json_filepath, "json")
-    if df:
+    if df is not None:
+        edge_attributes = {val: val for val in df.columns if val not in ignore_cols}
+        if edge_attrs:
+            edge_attributes = {val: val for val in edge_attrs}
         num_upserted = conn.upsertEdgesDataframe(
             df=df,
             sourceVertexType=source_vertex_type,
