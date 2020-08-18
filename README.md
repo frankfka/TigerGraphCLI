@@ -1,11 +1,16 @@
 # TigerGraphCLI (tgcli)
+
+![PyPI Version Badge](https://img.shields.io/pypi/v/tigergraphcli)
+![Python Versions Badge](https://img.shields.io/pypi/pyversions/tigergraphcli)
+
 TigerGraphCLI is a command-line utility for interacting with [TigerGraph](https://www.tigergraph.com/) servers. It's
 built on top of [pyTigerGraph](https://github.com/pyTigerGraph/pyTigerGraph).
 
 This project is still under active development. If you find a bug or have a feature request, feel free to create a Github issue.
 
 ## Installation
-tgcli works best with Python 3.7+, but should work with any Python3 distribution. Installation is simple:
+
+Tgcli is released on [PyPI](https://pypi.org/project/tigergraphcli/). Tgcli works best with Python 3.7+, but should work with any Python3 distribution. Installation is simple:
 `pip3 install tigergraphcli`.
 
 Verify your installation by running `tgcli version`
