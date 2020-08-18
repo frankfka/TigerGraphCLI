@@ -19,7 +19,7 @@ $ tgcli [OPTIONS] COMMAND [ARGS]...
 * `get`: Get resources from your TigerGraph server.
 * `gsql`: Run GSQL commands against a TigerGraph...
 * `load`: Load data into your TigerGraph server.
-* `reinit-dependencies`: Force download dependencies and generate a...
+* `reinit-dependencies`: Force download dependencies for the...
 * `version`
 
 ## `tgcli config`
@@ -87,7 +87,7 @@ $ tgcli config describe [OPTIONS] [CONFIG_NAME]
 **Options**:
 
 * `[CONFIG_NAME]`: The name of the configuration to use with the command.
-* `--show-sensitive`: Show password and secret in output if specified.  [default: False]
+* `--show-sensitive`: Show password and secrets in output if specified.  [default: False]
 * `--help`: Show this message and exit.
 
 ### `tgcli config list`
@@ -138,7 +138,7 @@ $ tgcli delete edges [OPTIONS] [CONFIG_NAME] [GRAPH_NAME]
 **Options**:
 
 * `[CONFIG_NAME]`: The name of the configuration to use with the command.
-* `[GRAPH_NAME]`: The name of the graph to us with the command.
+* `[GRAPH_NAME]`: The name of the graph to use with the command.
 * `--from-type TEXT`: Type of the source vertex.  [required]
 * `--from-id TEXT`: ID of the source vertex.  [required]
 * `--to-id TEXT`: ID of the target vertex
@@ -163,7 +163,7 @@ $ tgcli delete vertices [OPTIONS] [CONFIG_NAME] [GRAPH_NAME]
 **Options**:
 
 * `[CONFIG_NAME]`: The name of the configuration to use with the command.
-* `[GRAPH_NAME]`: The name of the graph to us with the command.
+* `[GRAPH_NAME]`: The name of the graph to use with the command.
 * `--type TEXT`: Type of the vertex.  [required]
 * `--id TEXT`: ID of the vertex to retrieve, multiple can be specified by using the flag multiple times. If this is specified, other query parameters are ignored.  [default: ]
 * `--where TEXT`: A condition to match for returned vertices, multiple can be specified by using the flag multiple times. Multiple conditions are joined with AND. See https://docs.tigergraph.com/dev/restpp-api/built-in-endpoints#filter . For string conditions, the literal can be escaped like so: '--where=gender=\"male\"'. Alternatively, string escapes can be replaced by the URL-encoded string '%22'.  [default: ]
@@ -207,7 +207,7 @@ $ tgcli get edges [OPTIONS] [CONFIG_NAME] [GRAPH_NAME]
 **Options**:
 
 * `[CONFIG_NAME]`: The name of the configuration to use with the command.
-* `[GRAPH_NAME]`: The name of the graph to us with the command.
+* `[GRAPH_NAME]`: The name of the graph to use with the command.
 * `--from-type TEXT`: Type of the source vertex.  [required]
 * `--from-id TEXT`: ID of the source vertex.  [required]
 * `--to-id TEXT`: ID of the target vertex
@@ -249,7 +249,7 @@ $ tgcli get types [OPTIONS] [CONFIG_NAME] [GRAPH_NAME]
 **Options**:
 
 * `[CONFIG_NAME]`: The name of the configuration to use with the command.
-* `[GRAPH_NAME]`: The name of the graph to us with the command.
+* `[GRAPH_NAME]`: The name of the graph to use with the command.
 * `--vertex TEXT`: Vertex type name to query. Specify * to query all.  [default: ]
 * `--edge TEXT`: Vertex type name to query. Specify * to query all.  [default: ]
 * `--help`: Show this message and exit.
@@ -267,7 +267,7 @@ $ tgcli get vertices [OPTIONS] [CONFIG_NAME] [GRAPH_NAME]
 **Options**:
 
 * `[CONFIG_NAME]`: The name of the configuration to use with the command.
-* `[GRAPH_NAME]`: The name of the graph to us with the command.
+* `[GRAPH_NAME]`: The name of the graph to use with the command.
 * `--type TEXT`: Type of the vertex.  [required]
 * `--id TEXT`: ID of the vertex to retrieve, multiple can be specified by using the flag multiple times. If this is specified, other query parameters are ignored.  [default: ]
 * `--attr TEXT`: Attributes to return for each vertex, multiple can be specified by using the flag multiple times. See https://docs.tigergraph.com/dev/restpp-api/built-in-endpoints#select .  [default: ]
@@ -308,7 +308,7 @@ $ tgcli gsql run [OPTIONS] [CONFIG_NAME] [GRAPH_NAME]
 **Options**:
 
 * `[CONFIG_NAME]`: The name of the configuration to use with the command.
-* `[GRAPH_NAME]`: The name of the graph to us with the command.
+* `[GRAPH_NAME]`: The name of the graph to use with the command.
 * `--command TEXT`: Inline GSQL command
 * `--file FILE`: Filepath to load a GSQL command from.
 * `--editor`: Launch an interactive editor to load the GSQL command  [default: False]
@@ -346,7 +346,7 @@ $ tgcli load edges [OPTIONS] [CONFIG_NAME] [GRAPH_NAME]
 **Options**:
 
 * `[CONFIG_NAME]`: The name of the configuration to use with the command.
-* `[GRAPH_NAME]`: The name of the graph to us with the command.
+* `[GRAPH_NAME]`: The name of the graph to use with the command.
 * `--source-type TEXT`: Type name of the source vertex  [required]
 * `--source-id TEXT`: Column name for the source vertex ID  [required]
 * `--target-type TEXT`: Type name of the target vertex  [required]
@@ -371,7 +371,7 @@ $ tgcli load vertices [OPTIONS] [CONFIG_NAME] [GRAPH_NAME]
 **Options**:
 
 * `[CONFIG_NAME]`: The name of the configuration to use with the command.
-* `[GRAPH_NAME]`: The name of the graph to us with the command.
+* `[GRAPH_NAME]`: The name of the graph to use with the command.
 * `--type TEXT`: Vertex type to map data to.  [required]
 * `--id TEXT`: Column name to set as the ID of the vertex  [required]
 * `--attr TEXT`: Column name of an vertex attribute, multiple can be specified by using the flag multiple times. If no values are provided, all columns will be used.  [default: ]
@@ -382,17 +382,19 @@ $ tgcli load vertices [OPTIONS] [CONFIG_NAME] [GRAPH_NAME]
 
 ## `tgcli reinit-dependencies`
 
-Force download dependencies and generate a new secret for the configuration
+Force download dependencies for the configuration. If a graph name is specified, a new secret will be
+generated for the graph.
 
 **Usage**:
 
 ```console
-$ tgcli reinit-dependencies [OPTIONS] [CONFIG_NAME]
+$ tgcli reinit-dependencies [OPTIONS] CONFIG_NAME
 ```
 
 **Options**:
 
-* `[CONFIG_NAME]`: The name of the configuration to use with the command.
+* `CONFIG_NAME`: The name of the configuration to use with the command.  [required]
+* `--graph TEXT`: The name of the graph to use with the command.  [default: ]
 * `--help`: Show this message and exit.
 
 ## `tgcli version`

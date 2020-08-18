@@ -35,7 +35,7 @@ def list_configs_command():
 def describe_config_command(
         config_name: str = typer.Argument(None, help=CONFIG_ARG_HELP),
         show_sensitive: bool = typer.Option(
-            False, "--show-sensitive", help="Show password and secret in output if specified."
+            False, "--show-sensitive", help="Show password and secrets in output if specified."
         )
 ):
     """Describe a configuration when given the config name

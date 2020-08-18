@@ -1,5 +1,5 @@
 import configparser
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, Tuple
 
 from tgcli.util.io import CONFIG_FILEPATH, CREDENTIALS_FILEPATH, APP_DIR
@@ -12,7 +12,7 @@ CONFIG_GS_PORT = "gs_port"
 CONFIG_USE_AUTH = "use_auth"
 CREDENTIALS_USERNAME_KEY = "username"
 CREDENTIALS_PASSWORD_KEY = "password"
-CREDENTIALS_SECRET_KEY = "secret"
+CREDENTIALS_SECRET_PREFIX = "secret_"  # Secrets are scoped to graph, stored as secret_GRAPHNAME
 
 # Default Values
 DEFAULT_RESTPP_PORT = '9000'
@@ -31,15 +31,15 @@ class TgcliConfigurationError(Exception):
 @dataclass
 class TgcliConfiguration:
     """A configuration object with all parameters needed to connect to a TigerGraph server."""
-    name: str # An alias - not used for connectivity
-    server: str # Host with protocol - ex. https://xyz.i.tgcloud.io
+    name: str  # An alias - not used for connectivity
+    server: str  # Host with protocol - ex. https://xyz.i.tgcloud.io
     username: str
     password: str
-    secret: str # An API secret, generated using username and password if auth is enabled
-    client_version: str # ex. 2.6.0
-    restpp_port: str = DEFAULT_RESTPP_PORT # https://docs-beta.tigergraph.com/dev/restpp-api/restpp-requests
-    gs_port: str = DEFAULT_GS_PORT # Graphstudio port, defaults to 14240
-    use_auth: bool = DEFAULT_USE_AUTH # Whether to use username & password auth
+    client_version: str  # Allowed values: 3.0.0, 2.6.0, 2.5.2, 2.5.0, 2.4.1, 2.4.0, 2.3.2
+    secrets: dict = field(default_factory=dict)  # Secrets, keyed by the graph name that they correspond to
+    restpp_port: str = DEFAULT_RESTPP_PORT  # https://docs-beta.tigergraph.com/dev/restpp-api/restpp-requests
+    gs_port: str = DEFAULT_GS_PORT  # Graphstudio port, defaults to 14240
+    use_auth: bool = DEFAULT_USE_AUTH  # Whether to use username & password auth
 
     def to_config_parser_dicts(self) -> Tuple[Dict, Dict]:
         """Splits the configuration into two data dictionaries - one for configuration and one for credentials.
@@ -55,20 +55,33 @@ class TgcliConfiguration:
         }
         creds = {
             CREDENTIALS_USERNAME_KEY: self.username,
-            CREDENTIALS_PASSWORD_KEY: self.password,
-            CREDENTIALS_SECRET_KEY: self.secret
+            CREDENTIALS_PASSWORD_KEY: self.password
         }
+        # Create secrets dict and merge it with credentials
+        secrets = {}
+        for graph_name, secret in self.secrets.items():
+            secrets[CREDENTIALS_SECRET_PREFIX + graph_name] = secret
+        creds = {**creds, **secrets}
         return conf, creds
 
     @classmethod
     def from_config_parser(cls, name: str, config_section: configparser.SectionProxy):
         """Parse a configuration from a configparser section"""
+
         # Default use_auth to True
         use_auth = DEFAULT_USE_AUTH
         try:
             use_auth = config_section.getboolean(CONFIG_USE_AUTH)
         except ValueError:
             pass
+
+        # Get all secrets
+        secrets = {}
+        for config_key, config_val in config_section.items():
+            if config_key.startswith(CREDENTIALS_SECRET_PREFIX):
+                # Of form "secret_GRAPHNAME" - parse GRAPHNAME
+                graph_name = config_key.replace(CREDENTIALS_SECRET_PREFIX, "", 1)
+                secrets[graph_name] = config_val
 
         return cls(
             name=name,
@@ -79,7 +92,7 @@ class TgcliConfiguration:
             use_auth=use_auth,
             username=config_section.get(CREDENTIALS_USERNAME_KEY, ""),
             password=config_section.get(CREDENTIALS_PASSWORD_KEY, ""),
-            secret=config_section.get(CREDENTIALS_SECRET_KEY, "")
+            secrets=secrets
         )
 
 
@@ -103,7 +116,7 @@ def save_configs(configs: Dict[str, TgcliConfiguration]):
     """Save the entire dictionary of configurations to files at $HOME/.tgcli/
 
     - .tgcli/config stores non-sensitive information
-    - .tgcli/credentials stores sensitive information (username, password, and secret)
+    - .tgcli/credentials stores sensitive information (username, password, and secrets)
     """
     combined_config = configparser.ConfigParser()
     combined_credentials = configparser.ConfigParser()

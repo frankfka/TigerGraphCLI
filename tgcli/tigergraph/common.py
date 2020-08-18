@@ -79,7 +79,7 @@ def get_tg_connection(config: TgcliConfiguration,
                       clean_init: bool = False) -> TigerGraphConnection:
     """Initialize a TigerGraph connection when given a configuration and an optional graph name
 
-    - if clean_init is specified, secret will be force updated
+    - if clean_init is specified, dependencies will be force downloaded
     - if no graph_name is given, then operations will be run on the entire server (ex. for operations such as echo)
     """
     conn = __get_tg_connection___(config, graph_name)
@@ -93,16 +93,18 @@ def get_tg_connection(config: TgcliConfiguration,
     conn.certLocation = get_cert_filepath(config).expanduser().__str__()
     # Still call init for other dependencies (self.url) - but dependencies will not be downloaded
     conn.initGsql(conn.jarLocation, conn.certLocation)
-    if config.use_auth:
-        # Get secret if not initialized, and get the API key with the secret
-        secret = config.secret
+    if config.use_auth and graph_name:
+        # Get secret for the graph, if provided
+        # TODO: Consider a class function for adding and retrieving secrets
+        secret = config.secrets.get(graph_name, None)
         if not secret or clean_init:
-            print("Creating new secret from credentials and saving to configuration.")
+            print(f"Creating new secret for graph {graph_name} and saving to configuration.")
+            conn.graphname = graph_name
             secret = conn.createSecret()
             if not secret:
-                raise ValueError("Could not create a secret for the connection.")
+                raise ValueError(f"Could not create a secret for the connection to graph {graph_name}.")
             # Also save the new config
-            config.secret = secret
+            config.secrets[graph_name] = secret
             upsert_config(config)
         # Finally, get the token
         conn.getToken(secret=secret)

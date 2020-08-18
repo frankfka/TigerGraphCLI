@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tigergraphcli"
-version = "0.0.1"
+version = "0.0.2"
 description = "CLI for TigerGraph"
 authors = ["Frank Jia <jiafrank98@gmail.com>"]
 license = "MIT"
