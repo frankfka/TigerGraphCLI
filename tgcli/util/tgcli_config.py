@@ -105,6 +105,7 @@ def __read_config_files__(raise_on_nonexistent: bool = False) -> Dict[str, Tgcli
         else:
             return {}
     config = configparser.ConfigParser()
+    config.optionxform = str  # Case sensitive
     config.read([CONFIG_FILEPATH, CREDENTIALS_FILEPATH])
     cli_configs: Dict[str, TgcliConfiguration] = {}
     for config_name in config.sections():
@@ -119,7 +120,9 @@ def save_configs(configs: Dict[str, TgcliConfiguration]):
     - .tgcli/credentials stores sensitive information (username, password, and secrets)
     """
     combined_config = configparser.ConfigParser()
+    combined_config.optionxform = str  # Case sensitive
     combined_credentials = configparser.ConfigParser()
+    combined_credentials.optionxform = str  # Case sensitive
     for name, conf in configs.items():
         conf_dict, creds_dict = conf.to_config_parser_dicts()
         combined_config[name] = conf_dict
