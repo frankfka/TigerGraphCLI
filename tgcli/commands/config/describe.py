@@ -27,5 +27,5 @@ def describe_config(config_name: str, show_sensitive: bool):
     cli.print_to_console(f"Password: {password}")
     # Secrets
     if show_sensitive:
-        for graph_name, secret in config.secrets:
+        for graph_name, secret in config.secrets.items():
             cli.print_to_console(f"Secret ({graph_name}): {secret}")
