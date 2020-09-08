@@ -72,3 +72,123 @@ to communicate with the server.
 
 ## 3 Defining a Schema
 
+The GSQL101 starter kit has a pre-defined schema when the database is provisioned. However, we'll walk through creating a schema
+using TGCLI. To get started, we'll first clear the existing schema using `tgcli gsql run gsql101 --command "drop all"`. 
+This usually takes a minute or so to complete.
+
+Notice that we issue the command, `tgcli gsql run`, followed by the name of our new configuration, which we've configured to be `gsql101`.
+
+We then issue an inline command using `--command`. 
+
+Next, let's define the schema following the [GSQL101](https://docs-beta.tigergraph.com/start/gsql-101/define-a-schema) 
+tutorial. The GSQL command itself is:
+
+```
+CREATE VERTEX person (
+    PRIMARY_ID name STRING,
+    name STRING, age INT,
+    gender STRING, state STRING
+)
+```
+
+To run a GSQL command using TGCLI, we can use the previous flag `--command` to issue an inline command. But for multiline
+commands, it is easier to use the `--editor` flag to launch the interactive editor. Let's create the vertex by running:
+
+`tgcli gsql run gsql101 --editor`
+
+This launches the system editor. Go ahead and paste in the `CREATE VERTEX` command, then save and exit the editor. 
+With `vim` as the default editor, for example, paste in the gsql command and type `:wq`.
+
+Now that the vertex schema is created, we can go ahead and create the edge schema as well, using the gsql command:
+
+```
+CREATE UNDIRECTED EDGE friendship (FROM person, TO person, connect_day DATETIME)
+```
+
+Then, we can create the graph itself, using the gsql command:
+
+```
+CREATE GRAPH social (person, friendship)
+```
+
+To double check that everything was created properly, run `tgcli gsql run gsql101 --command ls`. You should see
+that the output has the vertex type `person`, edge type `friendship`, and a graph named `social`. Nice job!
+
+## 4 Loading Data
+
+Now that we've defined a schema, we can load data to it using TGCLI. First, create the two `.csv` files from the
+[GSQL101 dataset](https://docs.tigergraph.com/v/2.5/intro/gsql-101/get-set#GSQL101-DataSet). The tutorial will assume
+that the relative paths of the files are `./person.csv` and `./friendship.csv`.
+
+Let's load some vertices! Issue the command:
+
+```
+tgcli load vertices gsql101 social --type person --id name --csv ./person.csv
+```
+
+The output should be the following:
+
+```
+/usr/bin/java
+Creating new secret for graph social and saving to configuration.
+Vertex load success. 7 vertices added.
+```
+
+Notice that the first time we communicate with a given graph, a secret will be created. This is used to generate
+API keys to talk to the remote GSQL server.
+
+We can then proceed to load edges:
+
+```
+tgcli load edges gsql101 social \
+    --source-type person --source-id person1 --target-type person --target-id person2 \
+    --edge-type friendship --edge-attr connect_day \
+    --csv ./friendship.csv
+```
+
+Once you run the command, you should see an error. This is because the edge attribute is called `connect_day`, but
+the column in the CSV is actually called `date` - to fix this, rename the CSV column to `connect_day`. Rerun the command
+and you should have loaded the correct edges.
+
+We're all done with loading data!
+
+## 5 Getting Data
+
+Now that we have loaded some data, let's try retrieving data from our graph database. To get a list of vertices:
+
+```
+tgcli get vertices gsql101 social --type person
+```
+
+This will return a list of all the vertices. TGCLI also gives the option to return certain attributes or to order/filter
+by a particular attribute. See [Usage Docs](https://github.com/frankfka/TigerGraphCLI/blob/master/docs/USAGE.md) for details.
+
+We can also retrieve edges in a similar way, but running:
+
+```
+tgcli get edges gsql101 social --from-type person --from-id Nancy
+```
+
+The above command should return a list of edges that are outbound from the `person` vertex with ID `Nancy`.
+
+## 6 Deleting Data
+
+Lastly, we'll try deleting data using TGCLI. Let's try deleting the edges that originate from Nancy:
+
+```
+tgcli delete edges gsql101 social --from-type person --from-id Nancy
+```
+
+We see that we get `{'friendship': 2}` returned - which means that 2 edges have been deleted. Now that the edges are deleted,
+we can try deleting the vertex with ID `Nancy` (sorry Nancy!):
+
+```
+tgcli delete vertices gsql101 social --type person --id Nancy
+```
+
+We see that the returned result is `1`, which indicates that one vertex was deleted.
+
+## 7 Wrap Up
+
+That was a basic overview of the functionality enabled by TGCLI. As you can see, using the CLI tool means that you won't need
+to write code to perform basic actions. To view more in-depth documentation, see [Usage Docs](https://github.com/frankfka/TigerGraphCLI/blob/master/docs/USAGE.md).
