@@ -30,4 +30,6 @@ under the home directory (ex. `~/.tgcli`)
 4. `tgcli get`: Retrieves data from a TigerGraph server
 5. `tgcli delete`: Delete data from a TigerGraph server.
 
-See [usage](https://github.com/frankfka/TigerGraphCLI/blob/master/docs/USAGE.md) for detailed documentation.
+See [Getting Started](https://github.com/frankfka/TigerGraphCLI/blob/master/docs/GETTING_STARTED.md) for a quick intro to TGCLI functionality.
+
+See [Usage](https://github.com/frankfka/TigerGraphCLI/blob/master/docs/USAGE.md) for detailed documentation.
